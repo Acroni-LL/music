@@ -2,14 +2,19 @@
   <div id="app">
     <keep-alive exclude="Player">
       <router-view />
+      <BackTop />
     </keep-alive>
   </div>
 </template>
 
 <script>
+import BackTop from "./components/BackTop";
+
 export default {
   name: "App",
-  components: {},
+  components: {
+    BackTop,
+  },
 };
 </script>
 

@@ -33,6 +33,7 @@ export default {
 <style scoped>
 .tabs {
   background: #fff;
+  height: 1000px;
 }
 
 .tabs-header {

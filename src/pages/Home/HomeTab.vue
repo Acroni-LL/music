@@ -9,7 +9,7 @@
       >
         <div class="panel hotsongs on">
           <ul class="list">
-            <li
+            <router-link
               :to="{ name: 'Player', params: { music_id: item.song_id } }"
               tag="li"
               class="song url"
@@ -23,7 +23,7 @@
                 <div class="name">{{ item.title }}</div>
                 <div class="author">{{ item.artist_name }}</div>
               </div>
-            </li>
+            </router-link>
           </ul>
         </div>
       </tab>

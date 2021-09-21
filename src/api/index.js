@@ -11,6 +11,11 @@ const getData = {
         return axios.get(base.baseUrl + base.type, {
             params: params
         })
+    },
+    playerData(params) {
+        return axios.get(base.baseUrl + base.type, {
+            params: params
+        })
     }
 }
 

@@ -1,169 +1,157 @@
 <template>
-    <div class="play" v-if="playerInfo.songinfo">
-        <div class="header">
-            <div class="title">
-                <router-link to="/">
-                    <i class="iconfont icon-shouye left"></i>
-                </router-link>
-                <div class="music-info">
-                    <p>{{ playerInfo.songinfo.title }}</p>
-                    <p class="author">{{ playerInfo.songinfo.author }}</p>
-                </div>
-                <router-link to="/search">
-                    <i class="iconfont icon-sousuo right"></i>
-                </router-link>
-            </div>
+  <div class="play" v-if="playerInfo.songinfo">
+    <div class="header">
+      <div class="title">
+        <router-link to="/">
+          <i class="iconfont icon-shouye left"></i>
+        </router-link>
+        <div class="music-info">
+          <p>{{ playerInfo.songInfo.title }}</p>
+          <p class="author">{{ playerInfo.songinfo.author }}</p>
         </div>
+      </div>
 
-        <div class="song-info">
-            <div class="song-info-img">
-                <img :src="playerInfo.songinfo.pic_radio">
-                <Lrc :songid="this.$route.params.id" :currentTime="currentTime" :duration="duration"/>
-            </div>
-            <div class="iconbox">
-                <i class="iconfont icon-shoucang2 left"></i>
-                <i class="box"></i>
-                <i class="iconfont icon-xiazai right"></i>
-            </div>
-        </div>
-
-        <div class="song">
-            <audio ref="player" :src="playerInfo.bitrate.show_link" controls></audio>
-        </div>
+      <router-link to="/search">
+        <i class="inconfont icon-sousuo right"></i
+      ></router-link>
     </div>
+    <div class="song-info">
+      <div class="song-info-img">
+        <img :src="playerInfo.songinfo.pic_radio" alt="" />
+      </div>
+      <div class="iconbox">
+        <i class="iconfont icon-shoucang2 left"></i>
+        <i class="box"></i>
+        <i class="iconfont icon-xiazai right"></i>
+      </div>
+    </div>
+    <div class="song">
+      <audio ref="player" :src="playerInfo.bitrate.show_link" controls></audio>
+    </div>
+  </div>
 </template>
 
 <script>
-
-import Lrc from "../../components/Lrc"
-
 export default {
-    name: "Player",
-    data() {
-        return {
-            playerInfo: {},
-            currentTime:"",
-            duration:""
-        };
+  name: "Player",
+  data() {
+    return {
+      palyerInfo: {},
+    };
+  },
+  mounted() {
+    this.$api
+      .playerData({
+        method: "baidu.ting.song.play",
+        songid: this.$route.params.id,
+      })
+      .then((res) => {
+        this.palyerInfo = res.data;
+        this.$nextTick(function () {
+          console.log(this.$refs.player);
+          this.addEventListener;
+        });
+      });
+  },
+  methods: {
+    playerAddEventListen() {
+      this.$refs.player.addEventListener("timeupdata", this.currentTimeHandler);
+      this.$refs.player.addEventListener("canplay", this.currentTimeHandler);
     },
-    components:{
-        Lrc
+    playerRemoveEventListen() {
+      this.$refs.player.removeEventListener(
+        "timeupdata",
+        this.durationTimeHandler
+      );
+      this.$refs.player.removeEventListener(
+        "canplay",
+        this.durationTimeHandler
+      );
     },
-    mounted() {
-        this.$api
-            .playerData({
-                method: "baidu.ting.song.play",
-                songid: this.$route.params.id
-            })
-            .then(res => {
-                this.playerInfo = res.data;
-                // DOM还没有更新
-                this.$nextTick(function() {
-                    // DOM 现在更新了
-                   //获取当前播放时间和总时长
-                   this.playerAddEventListen();
-                });
-
-                // 这里会被打死
-                // setTimeout(() => {
-                //     console.log(this.$refs.player);
-                // });
-            });
+    currentTimeHandler() {
+      console.log(this.$refs.player.currentTime);
     },
-    methods:{
-        playerAddEventListen(){
-            this.$refs.player.addEventListener("timeupdate",this.currentTimeHandler)
-            this.$refs.player.addEventListener("canplay",this.durationTimeHandler)
-        },
-        playerRemoveEventListen(){
-            this.$refs.player.removeEventListener("timeupdate",this.currentTimeHandler);
-            this.$refs.player.removeEventListener("canplay",this.durationTimeHandler)
-        },
-
-        currentTimeHandler(){
-            this.currentTime = this.$refs.player.currentTime;
-        },
-        durationTimeHandler(){
-            this.duration = this.$refs.player.duration
-        }
+    durationTimeHandler() {
+      console.log(this.$refs.player.duration);
     },
     beforeDestroy() {
-        this.playerRemoveEventListen();
+      this.playerRemoveEventListen();
     },
+  },
 };
 </script>
 
 <style scoped>
 .header {
-    padding: 15px;
+  padding: 15px;
 }
 
 .music-info {
-    flex: 1;
-    font-size: 20px;
+  flex: 1;
+  font-size: 20px;
 }
 
 .title {
-    display: flex;
-    text-align: center;
+  display: flex;
+  text-align: center;
 }
 
 .left {
-    font-size: 30px;
+  font-size: 30px;
 }
 
 .ca {
-    color: red;
+  color: red;
 }
 
 .right {
-    font-size: 30px;
+  font-size: 30px;
 }
 
 .song-info {
-    padding: 15px;
+  padding: 15px;
 }
 
 .song-info-img {
-    text-align: center;
+  text-align: center;
 }
 
 .song-info-img img {
-    width: 50%;
-    border-radius: 5px;
-    box-shadow: 0 0 10px 0 rgba(50, 50, 50, 0.31);
+  width: 50%;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(50, 50, 50, 0.31);
 }
 
 .song-lrc {
-    margin-top: 10px;
-    min-height: 50px;
+  margin-top: 10px;
+  min-height: 50px;
 }
 
 .iconbox {
-    display: flex;
-    margin-top: 30px;
+  display: flex;
+  margin-top: 30px;
 }
 
 .iconbox .box {
-    flex: 1;
+  flex: 1;
 }
 
 .song {
-    width: 100%;
-    text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 .song audio {
-    width: 80%;
+  width: 80%;
 }
 
 .active {
-    color: #222;
+  color: #222;
 }
 
 .author {
-    font-size: 12px;
-    color: #999;
+  font-size: 12px;
+  color: #999;
 }
 </style>
 
